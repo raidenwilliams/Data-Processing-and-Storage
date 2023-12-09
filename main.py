@@ -6,30 +6,46 @@ class InMemoryDB:
         self.transaction = None
 
     def get(self, key):
+        if key in self.db:
+            print("-> Get message: " + str(key) + " " + str(self.db.get(key, None)))
+            return self.db.get(key, None)
         if self.transaction is not None and key in self.transaction:
-            return self.transaction[key]
-        return self.db.get(key, None)
+            print("-> Null, transaction in progress")
+            return None
+        elif key is not self.db and key is not self.transaction:
+            print("-> Key " + str(key) + " does not exist in db")
+            return None            
 
     def put(self, key, val):
         if self.transaction is None:
-            print("No transaction in progress")
-        self.transaction[key] = val
+            print("-> No transaction in progress")
+        else:
+            self.transaction[key] = val
+            print("-> Put message: " + key + " " + val)
+
 
     def begin_transaction(self):
         if self.transaction is not None:
-            print("Transaction already in progress")
-        self.transaction = {}
+            print("-> Transaction already in progress")
+        else:
+            self.transaction = {}
+            print("-> Transaction started")
 
     def commit(self):
         if self.transaction is None:
-            print("No transaction in progress")
-        self.db.update(self.transaction)
-        self.transaction = None
+            print("-> No transaction in progress")
+        else:
+            print("-> Transaction committed")
+            self.db.update(self.transaction)
+            self.transaction = None
 
     def rollback(self):
         if self.transaction is None:
-            print("No transaction in progress")
-        self.transaction = None
+            print("-> No transaction in progress")
+        else:
+            self.transaction = None
+            print("-> Transaction rolled back")
+
 
 import sys
 
@@ -49,6 +65,9 @@ class Main:
             self.db.put(account_a, balance_a - amount)
             self.db.put(account_b, balance_b + amount)
             self.db.commit()
+            print("-> Transfer successful" + "from" + account_a + " to " + account_b + 
+                        " for $" + amount + " dollars 💵")
+
         except Exception as e:
             print(f"Error: {e}")
             self.db.rollback()
@@ -88,32 +107,35 @@ if __name__ == "__main__":
 
     while (True):
         command = input("\nInput command:\n")
+
         if (command == "b"):
             db.begin_transaction()
-            print("-> Transaction started")
+
         elif (command == "p"):
             key = input("Input key: ")
             val = input("Input val: ")
             db.put(key, val)
-            print("-> Put successful: " + key + " " + val)
+
         elif (command == "g"):
             key = input("Input key: ")
             val = db.get(key)
-            print("-> Get successful: " + key + " " + str(val))
+            
         elif (command == "c"):
             db.commit()
-            print("-> Transaction committed")
+
         elif (command == "r"):
             db.rollback()
-            print("-> Transaction rolled back")
+
         elif (command == "t"):
             account_a = input("Input account a: ")
             account_b = input("Input account b: ")
             amount = input("Input amount: ")
             main.transfer(account_a, account_b, amount)
-            print("-> Transfer successful" + "from" + account_a + " to " + account_b + " for $" + amount + " dollars 💵")
+
         elif (command == "e"):
+            os.system('cls' if os.name == 'nt' else 'clear')
             sys.exit()
+
         else:
             print("-> Invalid command type")
 
