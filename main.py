@@ -87,7 +87,7 @@ if __name__ == "__main__":
     print("|___________________________________|")
 
     while (True):
-        command = input("\ninput command:\n")
+        command = input("\nInput command:\n")
         if (command == "b"):
             db.begin_transaction()
             print("-> Transaction started")
