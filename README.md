@@ -53,6 +53,17 @@ For this mini project, I think that it would need to have proper test cases so s
 |___________________________________|
 
 Input command:
+g
+Input key: a
+-> Key a does not exist in db
+
+Input command:
+p
+Input key: a
+Input val: 5
+-> No transaction in progress
+
+Input command:
 b
 -> Transaction started
 
