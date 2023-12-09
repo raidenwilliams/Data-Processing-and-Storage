@@ -9,7 +9,7 @@
 - ```cd Data-Processing-and-Storage```
 
 ### Commands to run 
-```python main.py```
+```python main.py``` or ```python3 main.py``` depending on python installation
 - Follow further commands given in CLI
 ```
  ___________________________________
